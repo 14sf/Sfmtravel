@@ -1,0 +1,322 @@
+{
+  "name": "sfm-songa-finance-manager",
+  "version": "1.0.0",
+  "description": "Application de gestion financière complète avec modules voyage, réservations, tontines et outils collaboratifs",
+  "main": "index.html",
+  "keywords": [
+    "finance",
+    "management",
+    "travel",
+    "booking",
+    "tontine",
+    "pwa",
+    "firebase",
+    "javascript"
+  ],
+  "author": {
+    "name": "SFM Team",
+    "email": "contact@sfm-app.com",
+    "url": "https://sfm-app.com"
+  },
+  "license": "MIT",
+  "homepage": "https://sfm-app.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/votre-username/sfm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/votre-username/sfm/issues",
+    "email": "support@sfm-app.com"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "scripts": {
+    "start": "firebase serve --host 0.0.0.0",
+    "dev": "firebase emulators:start",
+    "build": "npm run validate && npm run optimize",
+    "deploy": "firebase deploy",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:preview": "firebase hosting:channel:deploy preview",
+    "validate": "npm run lint && npm run test",
+    "lint": "eslint js/ --ext .js",
+    "lint:fix": "eslint js/ --ext .js --fix",
+    "format": "prettier --write \"**/*.{js,css,html,md}\"",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "optimize": "npm run minify:css && npm run minify:js",
+    "minify:css": "cleancss -o css/style.min.css css/style.css",
+    "minify:js": "terser js/*.js --compress --mangle -o js/app.min.js",
+    "analyze": "npm run analyze:bundle && npm run analyze:performance",
+    "analyze:bundle": "bundlesize",
+    "analyze:performance": "lighthouse http://localhost:5000 --output html --output-path ./reports/lighthouse.html",
+    "backup": "node scripts/backup-data.js",
+    "seed": "node scripts/seed-data.js",
+    "clean": "rimraf dist/ .cache/ reports/",
+    "precommit": "npm run lint && npm run test",
+    "prepush": "npm run build",
+    "postinstall": "npm run setup:hooks",
+    "setup:hooks": "husky install",
+    "security:audit": "npm audit --audit-level high",
+    "security:fix": "npm audit fix",
+    "docs": "jsdoc js/ -d docs/api/",
+    "serve:dist": "serve dist/ -s -l 3000",
+    "emulators": "firebase emulators:start --import=./backup --export-on-exit=./backup"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.0",
+    "@babel/preset-env": "^7.22.0",
+    "babel-jest": "^29.5.0",
+    "bundlesize": "^0.18.1",
+    "clean-css-cli": "^5.6.0",
+    "eslint": "^8.42.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "firebase-tools": "^12.4.0",
+    "husky": "^8.0.3",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
+    "jsdoc": "^4.0.2",
+    "lighthouse": "^10.2.0",
+    "prettier": "^2.8.8",
+    "rimraf": "^5.0.1",
+    "serve": "^14.2.0",
+    "terser": "^5.18.0"
+  },
+  "dependencies": {
+    "firebase": "^9.22.0"
+  },
+  "peerDependencies": {
+    "firebase-admin": "^11.9.0"
+  },
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "maintained node versions"
+  ],
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "browsers": [
+              "last 2 versions",
+              "not dead",
+              "not < 2%"
+            ]
+          }
+        }
+      ]
+    ]
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es2021": true,
+      "jest": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "prettier"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 12,
+      "sourceType": "module"
+    },
+    "rules": {
+      "no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "^_"
+        }
+      ],
+      "no-console": "warn",
+      "prefer-const": "error",
+      "no-var": "error"
+    },
+    "globals": {
+      "firebase": "readonly",
+      "window": "readonly",
+      "document": "readonly",
+      "localStorage": "readonly",
+      "sessionStorage": "readonly",
+      "fetch": "readonly"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "collectCoverageFrom": [
+      "js/**/*.js",
+      "!js/**/*.min.js",
+      "!js/vendor/**"
+    ],
+    "coverageDirectory": "reports/coverage",
+    "coverageReporters": [
+      "html",
+      "text",
+      "lcov"
+    ],
+    "testMatch": [
+      "**/tests/**/*.test.js",
+      "**/__tests__/**/*.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.js"
+    ]
+  },
+  "bundlesize": [
+    {
+      "path": "css/style.css",
+      "maxSize": "50 KB"
+    },
+    {
+      "path": "js/app.js",
+      "maxSize": "100 KB"
+    }
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit",
+      "pre-push": "npm run prepush"
+    }
+  },
+  "firebase": {
+    "hosting": {
+      "public": "./",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**",
+        "**/*.md",
+        "tests/**",
+        "scripts/**",
+        "reports/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(js|css)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=31536000"
+            }
+          ]
+        },
+        {
+          "source": "**/*.@(jpg|jpeg|gif|png|svg|webp)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=31536000"
+            }
+          ]
+        },
+        {
+          "source": "sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        }
+      ],
+      "cleanUrls": true,
+      "trailingSlash": false
+    },
+    "emulators": {
+      "auth": {
+        "port": 9099
+      },
+      "firestore": {
+        "port": 8080
+      },
+      "hosting": {
+        "port": 5000
+      },
+      "ui": {
+        "enabled": true,
+        "port": 4000
+      }
+    }
+  },
+  "config": {
+    "app": {
+      "name": "SFM - Songa Finance Manager",
+      "version": "1.0.0",
+      "build": "2025.09.05",
+      "environment": "production"
+    },
+    "features": {
+      "auth": true,
+      "caisse": true,
+      "travel": true,
+      "booking": true,
+      "tontine": true,
+      "widgets": true,
+      "team": true,
+      "offline": true,
+      "pwa": true
+    },
+    "apis": {
+      "weather": "https://api.open-meteo.com/v1/forecast",
+      "exchange": "https://api.exchangerate-api.com/v4/latest"
+    },
+    "limits": {
+      "maxTransactions": 10000,
+      "maxTeamMembers": 50,
+      "maxFileSize": 5242880
+    }
+  },
+  "funding": {
+    "type": "individual",
+    "url": "https://github.com/sponsors/votre-username"
+  },
+  "contributors": [
+    {
+      "name": "Développeur Principal",
+      "email": "dev@sfm-app.com",
+      "role": "Lead Developer"
+    }
+  ],
+  "directories": {
+    "doc": "docs",
+    "test": "tests",
+    "lib": "js"
+  },
+  "files": [
+    "index.html",
+    "css/",
+    "js/",
+    "assets/",
+    "README.md",
+    "LICENSE"
+  ],
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ]
+}
+        "
