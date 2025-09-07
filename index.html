@@ -5,28 +5,283 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SFM - Songa Finance Manager</title>
   <link rel="manifest" href="./manifest.webmanifest" />
-  <link rel="stylesheet" href="./css/style.css" />
-  <link rel="icon" href="./assets/icon-192.png" />
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="icon" href="./icon-192.png" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  
+  <!-- Configuration Firebase -->
   <script src="./env.js"></script>
 </head>
 <body>
-  <div id="authContainer"></div>
-  <div id="appContainer"></div>
-  <script src="./js/app.js" defer></script>
-  <script src="./js/auth.js" defer></script>
-  <script src="./js/caisse.js" defer></script>
-  <script src="./js/travel.js" defer></script>
-  <script src="./js/booking.js" defer></script>
-  <script src="./js/tontine.js" defer></script>
-  <script src="./js/widgets.js" defer></script>
-  <script src="./js/dashboard.js" defer></script>
+  <!-- Interface d'authentification -->
+  <div id="authContainer" style="display: flex;">
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="logo">SFM</div>
+        <p class="tagline">Songa Finance Manager</p>
+        
+        <form id="authForm">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" class="form-input" required>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt"></i>
+            <span id="authButtonText">Se connecter</span>
+          </button>
+        </form>
+        
+        <button id="googleAuth" class="btn-google">
+          <i class="fab fa-google"></i> Continuer avec Google
+        </button>
+        
+        <div class="auth-switch">
+          <span id="authSwitchText">Pas de compte ?</span>
+          <a href="#" id="authSwitchLink">S'inscrire</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interface principale de l'application -->
+  <div id="appContainer" style="display: none;">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h1>SFM</h1>
+        <p>Finance Manager</p>
+      </div>
+      
+      <nav class="nav-menu">
+        <a href="#dashboard" class="nav-item active" data-module="dashboard">
+          <i class="fas fa-chart-pie"></i> Dashboard
+        </a>
+        <a href="#caisse" class="nav-item" data-module="caisse">
+          <i class="fas fa-cash-register"></i> Caisse
+        </a>
+        <a href="#travel" class="nav-item" data-module="travel">
+          <i class="fas fa-plane"></i> Voyage
+        </a>
+        <a href="#booking" class="nav-item" data-module="booking">
+          <i class="fas fa-calendar-check"></i> Réservations
+        </a>
+        <a href="#tontine" class="nav-item" data-module="tontine">
+          <i class="fas fa-users"></i> Tontines
+        </a>
+        <a href="#widgets" class="nav-item" data-module="widgets">
+          <i class="fas fa-th"></i> Widgets
+        </a>
+      </nav>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="main-content">
+      <div class="header">
+        <h1 id="moduleTitle">Dashboard</h1>
+        <div class="user-info">
+          <span id="userName">Utilisateur</span>
+          <div id="userAvatar" class="user-avatar">U</div>
+        </div>
+      </div>
+
+      <!-- Module Dashboard -->
+      <div id="dashboard" class="module-content active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value">0 €</div>
+            <div class="stat-label">Balance totale</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">0</div>
+            <div class="stat-label">Offres actives</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">0</div>
+            <div class="stat-label">Réservations</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">0</div>
+            <div class="stat-label">Membres équipe</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module Caisse -->
+      <div id="caisse" class="module-content">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value">0 €</div>
+            <div class="stat-label">Balance</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">0 €</div>
+            <div class="stat-label">Revenus ce mois</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">0 €</div>
+            <div class="stat-label">Dépenses ce mois</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Ajouter une Transaction</h2>
+          <div class="transaction-form">
+            <input type="text" class="form-input" placeholder="Description">
+            <input type="number" class="form-input" placeholder="Montant (€)" step="0.01">
+            <select class="form-input">
+              <option value="revenus">Revenus</option>
+              <option value="voyage">Voyage</option>
+              <option value="nourriture">Nourriture</option>
+              <option value="transport">Transport</option>
+              <option value="tontine">Tontine</option>
+              <option value="autre">Autre</option>
+            </select>
+            <button class="btn btn-primary">
+              <i class="fas fa-plus"></i> Ajouter
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Transactions Récentes</h2>
+          <div class="transaction-list">
+            <div class="transaction-item">
+              <span>Aucune transaction pour le moment</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module Travel -->
+      <div id="travel" class="module-content">
+        <div class="card">
+          <h2>Créer une Offre de Voyage</h2>
+          <div class="transaction-form">
+            <input type="text" class="form-input" placeholder="Titre de l'offre">
+            <input type="text" class="form-input" placeholder="Destination">
+            <input type="number" class="form-input" placeholder="Prix (€)" step="0.01">
+            <button class="btn btn-primary">
+              <i class="fas fa-plus"></i> Créer l'offre
+            </button>
+          </div>
+        </div>
+
+        <div class="travel-grid">
+          <!-- Les offres seront ajoutées ici dynamiquement -->
+        </div>
+      </div>
+
+      <!-- Module Booking -->
+      <div id="booking" class="module-content">
+        <div class="card">
+          <h2>Calendrier des Réservations</h2>
+          <div class="calendar">
+            <!-- Le calendrier sera généré dynamiquement -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Module Tontine -->
+      <div id="tontine" class="module-content">
+        <div class="card">
+          <h2>Gestion des Tontines</h2>
+          <p>Module de gestion des tontines en cours de développement.</p>
+        </div>
+      </div>
+
+      <!-- Module Widgets -->
+      <div id="widgets" class="module-content">
+        <div class="card weather-widget">
+          <div class="weather-icon">
+            <i class="fas fa-sun"></i>
+          </div>
+          <div class="weather-info">
+            <h3>Zurich, CH</h3>
+            <p>22°C • Ensoleillé</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Calculatrice</h2>
+          <div class="calculator">
+            <div class="calc-display" id="calcDisplay">0</div>
+            <div class="calc-btn" onclick="clearCalc()">C</div>
+            <div class="calc-btn" onclick="deleteLast()">⌫</div>
+            <div class="calc-btn operator" onclick="appendToCalc('/')">/</div>
+            <div class="calc-btn operator" onclick="appendToCalc('*')">×</div>
+            
+            <div class="calc-btn" onclick="appendToCalc('7')">7</div>
+            <div class="calc-btn" onclick="appendToCalc('8')">8</div>
+            <div class="calc-btn" onclick="appendToCalc('9')">9</div>
+            <div class="calc-btn operator" onclick="appendToCalc('-')">-</div>
+            
+            <div class="calc-btn" onclick="appendToCalc('4')">4</div>
+            <div class="calc-btn" onclick="appendToCalc('5')">5</div>
+            <div class="calc-btn" onclick="appendToCalc('6')">6</div>
+            <div class="calc-btn operator" onclick="appendToCalc('+')">+</div>
+            
+            <div class="calc-btn" onclick="appendToCalc('1')">1</div>
+            <div class="calc-btn" onclick="appendToCalc('2')">2</div>
+            <div class="calc-btn" onclick="appendToCalc('3')">3</div>
+            <div class="calc-btn operator" onclick="calculateResult()" style="grid-row: span 2;">=</div>
+            
+            <div class="calc-btn" onclick="appendToCalc('0')" style="grid-column: span 2;">0</div>
+            <div class="calc-btn" onclick="appendToCalc('.')">.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Convertisseur de Devise</h2>
+          <div class="form-group">
+            <input type="number" id="currencyAmount" class="form-input" placeholder="Montant" value="1">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <select id="fromCurrency" class="form-input">
+              <option value="EUR">EUR</option>
+              <option value="USD">USD</option>
+              <option value="CHF">CHF</option>
+              <option value="GBP">GBP</option>
+            </select>
+            <select id="toCurrency" class="form-input">
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="CHF">CHF</option>
+              <option value="GBP">GBP</option>
+            </select>
+          </div>
+          <div id="conversionResult" style="margin-top: 1rem; font-weight: bold;">
+            Résultat de la conversion
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts de l'application -->
+  <script src="./js/app.js"></script>
+  <script src="./js/auth.js"></script>
+  <script src="./js/caisse.js"></script>
+  <script src="./js/travel.js"></script>
+  <script src="./js/booking.js"></script>
+  <script src="./js/tontine.js"></script>
+  <script src="./js/widgets.js"></script>
+  <script src="./js/dashboard.js"></script>
+
+  <!-- Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./service-worker.js');
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(reg => console.log('SW registered:', reg))
+        .catch(err => console.log('SW registration failed:', err));
     }
   </script>
 </body>
