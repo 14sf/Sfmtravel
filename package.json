@@ -3,39 +3,10 @@
   "version": "1.0.0",
   "description": "Application de gestion financière complète avec modules voyage, réservations, tontines et outils collaboratifs",
   "main": "index.html",
-  "keywords": [
-    "finance",
-    "management",
-    "travel",
-    "booking",
-    "tontine",
-    "pwa",
-    "firebase",
-    "javascript"
-  ],
-  "author": {
-    "name": "SFM Team",
-    "email": "contact@sfm-app.com",
-    "url": "https://sfm-app.com"
-  },
-  "license": "MIT",
-  "homepage": "https://sfm-app.com",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/votre-username/sfm.git"
-  },
-  "bugs": {
-    "url": "https://github.com/votre-username/sfm/issues",
-    "email": "support@sfm-app.com"
-  },
-  "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=8.0.0"
-  },
   "scripts": {
     "start": "firebase serve --host 0.0.0.0",
     "dev": "firebase emulators:start",
-    "build": "npm run validate && npm run optimize",
+    "build": "npm run optimize",
     "deploy": "firebase deploy",
     "deploy:hosting": "firebase deploy --only hosting",
     "deploy:preview": "firebase hosting:channel:deploy preview",
@@ -64,6 +35,35 @@
     "docs": "jsdoc js/ -d docs/api/",
     "serve:dist": "serve dist/ -s -l 3000",
     "emulators": "firebase emulators:start --import=./backup --export-on-exit=./backup"
+  },
+  "keywords": [
+    "finance",
+    "management",
+    "travel",
+    "booking",
+    "tontine",
+    "pwa",
+    "firebase",
+    "javascript"
+  ],
+  "author": {
+    "name": "SFM Team",
+    "email": "contact@sfm-app.com",
+    "url": "https://sfm-app.com"
+  },
+  "license": "MIT",
+  "homepage": "https://sfm-app.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/votre-username/sfm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/votre-username/sfm/issues",
+    "email": "support@sfm-app.com"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.0",
@@ -191,111 +191,6 @@
       "pre-push": "npm run prepush"
     }
   },
-  "firebase": {
-    "hosting": {
-      "public": "./",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**",
-        "**/*.md",
-        "tests/**",
-        "scripts/**",
-        "reports/**"
-      ],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ],
-      "headers": [
-        {
-          "source": "**/*.@(js|css)",
-          "headers": [
-            {
-              "key": "Cache-Control",
-              "value": "max-age=31536000"
-            }
-          ]
-        },
-        {
-          "source": "**/*.@(jpg|jpeg|gif|png|svg|webp)",
-          "headers": [
-            {
-              "key": "Cache-Control",
-              "value": "max-age=31536000"
-            }
-          ]
-        },
-        {
-          "source": "sw.js",
-          "headers": [
-            {
-              "key": "Cache-Control",
-              "value": "no-cache"
-            }
-          ]
-        }
-      ],
-      "cleanUrls": true,
-      "trailingSlash": false
-    },
-    "emulators": {
-      "auth": {
-        "port": 9099
-      },
-      "firestore": {
-        "port": 8080
-      },
-      "hosting": {
-        "port": 5000
-      },
-      "ui": {
-        "enabled": true,
-        "port": 4000
-      }
-    }
-  },
-  "config": {
-    "app": {
-      "name": "SFM - Songa Finance Manager",
-      "version": "1.0.0",
-      "build": "2025.09.05",
-      "environment": "production"
-    },
-    "features": {
-      "auth": true,
-      "caisse": true,
-      "travel": true,
-      "booking": true,
-      "tontine": true,
-      "widgets": true,
-      "team": true,
-      "offline": true,
-      "pwa": true
-    },
-    "apis": {
-      "weather": "https://api.open-meteo.com/v1/forecast",
-      "exchange": "https://api.exchangerate-api.com/v4/latest"
-    },
-    "limits": {
-      "maxTransactions": 10000,
-      "maxTeamMembers": 50,
-      "maxFileSize": 5242880
-    }
-  },
-  "funding": {
-    "type": "individual",
-    "url": "https://github.com/sponsors/votre-username"
-  },
-  "contributors": [
-    {
-      "name": "Développeur Principal",
-      "email": "dev@sfm-app.com",
-      "role": "Lead Developer"
-    }
-  ],
   "directories": {
     "doc": "docs",
     "test": "tests",
