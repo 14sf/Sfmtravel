@@ -1,11 +1,16 @@
 {
   "name": "sfm-songa-finance-manager",
   "version": "1.0.0",
-  "description": "Application de gestion financière complète avec modules voyage, réservations, tontines et outils collaboratifs",
-  "main": "index.html",
+  "description": "SFM Travel App",
   "scripts": {
-    "start": "firebase serve --host 0.0.0.0",
-    "dev": "firebase emulators:start",
-    "build": "echo \"✅ Build terminé avec succès\""
+    "start": "live-server",
+    "build": "npm run optimize",
+    "optimize": "echo 'No JS to minify'"
+  },
+  "keywords": [],
+  "author": "Fabrice Songa",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.1"
   }
 }
