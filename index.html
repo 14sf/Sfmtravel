@@ -1,76 +1,86 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SFM App – Page d’accueil</title>
+  <title>SFM - Accueil</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="home.css" />
 </head>
 <body>
-  <header>
-    <h1>SFM – Songa Finance Manager</h1>
-    <div class="language-selector">
-      <button onclick="setLanguage('fr')">🇫🇷</button>
-      <button onclick="setLanguage('en')">🇬🇧</button>
-      <button onclick="setLanguage('rw')">🇷🇼</button>
-    </div>
-    <nav>
-      <ul>
-        <li><a href="#" onclick="navigateTo('caisse')">📦 Caisse</a></li>
-        <li><a href="#" onclick="navigateTo('travel')">🧳 Travel</a></li>
-        <li><a href="#" onclick="navigateTo('booking')">📆 Booking</a></li>
-        <li><a href="#" onclick="navigateTo('tontine')">🤝 Tontine</a></li>
-        <li><a href="#" onclick="navigateTo('widgets')">🧰 Widgets</a></li>
-        <li><a href="#" onclick="logout()">🚪 Déconnexion</a></li>
-      </ul>
-    </nav>
+  <header class="sfm-header">
+    <h1 id="title">Bienvenue sur SFM</h1>
+    <select id="lang-selector" aria-label="Choisir une langue">
+      <option value="fr">🇫🇷 Français</option>
+      <option value="en">🇬🇧 English</option>
+      <option value="rw">🇷🇼 Kinyarwanda</option>
+    </select>
   </header>
 
-  <main id="main-content">
-    <p>Bienvenue sur SFM. Choisissez un module dans le menu.</p>
+  <main class="sfm-main">
+    <section class="sfm-card" onclick="navigate('caisse')">
+      <h2 data-i18n="caisse">💰 Caisse</h2>
+      <p data-i18n="caisse_desc">Gérez vos budgets et vos dépenses.</p>
+    </section>
+    <section class="sfm-card" onclick="navigate('travel')">
+      <h2 data-i18n="travel">✈️ Travel</h2>
+      <p data-i18n="travel_desc">Planifiez vos voyages en équipe.</p>
+    </section>
+    <section class="sfm-card" onclick="navigate('booking')">
+      <h2 data-i18n="booking">📅 Booking</h2>
+      <p data-i18n="booking_desc">Réservez vos activités et services.</p>
+    </section>
   </main>
 
-  <footer>
-    <p>© 2025 SFM App. Tous droits réservés.</p>
-    <a href="https://github.com/14sf/Sfmtravel" target="_blank">Voir sur GitHub</a>
+  <footer class="sfm-footer">
+    <p>&copy; 2025 SFM App</p>
   </footer>
 
-  <!-- Scripts JS -->
-  <script src="./js/app.js"></script>
-  <script src="./js/auth.js"></script>
-  <script src="./js/caisse.js"></script>
-  <script src="./js/travel.js"></script>
-  <script src="./js/booking.js"></script>
-  <script src="./js/tontine.js"></script>
-  <script src="./js/widgets.js"></script>
-  <script src="./js/dashboard.js"></script>
-
   <script>
-    function setLanguage(lang) {
-      localStorage.setItem("language", lang);
-      alert("Langue changée : " + lang);
-      // Tu peux déclencher ici un vrai rechargement ou changement de texte
-    }
-
-    function navigateTo(module) {
-      document.getElementById("main-content").innerHTML = `<p>Chargement du module <b>${module}</b>...</p>`;
-      // Charger dynamiquement un module si nécessaire
-    }
-
-    function logout() {
-      firebase.auth().signOut().then(() => {
-        alert("Déconnecté");
-        window.location.reload();
-      });
-    }
-
-    // Protection : redirection si utilisateur non connecté
-    firebase.auth().onAuthStateChanged(user => {
-      if (!user) {
-        window.location.href = "login.html";
+    const translations = {
+      fr: {
+        caisse: "💰 Caisse",
+        caisse_desc: "Gérez vos budgets et vos dépenses.",
+        travel: "✈️ Travel",
+        travel_desc: "Planifiez vos voyages en équipe.",
+        booking: "📅 Booking",
+        booking_desc: "Réservez vos activités et services.",
+        title: "Bienvenue sur SFM"
+      },
+      en: {
+        caisse: "💰 Cash",
+        caisse_desc: "Manage your budgets and expenses.",
+        travel: "✈️ Travel",
+        travel_desc: "Plan your trips as a team.",
+        booking: "📅 Booking",
+        booking_desc: "Book your activities and services.",
+        title: "Welcome to SFM"
+      },
+      rw: {
+        caisse: "💰 Agaciro",
+        caisse_desc: "Tegura ingengo y’imari n’imikoreshereze y’amafaranga.",
+        travel: "✈️ Ingendo",
+        travel_desc: "Tegura ingendo mu matsinda.",
+        booking: "📅 Gufata igihe",
+        booking_desc: "Fata igihe ku bikorwa na serivisi.",
+        title: "Ikaze kuri SFM"
       }
+    };
+
+    const selector = document.getElementById('lang-selector');
+    selector.addEventListener('change', (e) => {
+      const lang = e.target.value;
+      for (const key in translations[lang]) {
+        const elements = document.querySelectorAll(`[data-i18n="${key}"]`);
+        elements.forEach(el => el.textContent = translations[lang][key]);
+      }
+      document.getElementById("title").textContent = translations[lang]["title"];
     });
+
+    function navigate(module) {
+      window.location.href = `${module}.html`;
+    }
   </script>
 </body>
 </html>
